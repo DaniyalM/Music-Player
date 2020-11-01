@@ -1,49 +1,52 @@
 package com.example.design.login
 
-import android.app.ActivityOptions
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import com.example.design.BaseActivity
+import android.widget.Toast
+import com.example.design.ui.base.BaseActivity
 import com.example.design.R
-import com.example.design.Utils
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.design.Utils.hideStatusbar
+import com.example.design.login.RegistrationUtils.validateEmail
+import com.example.design.login.RegistrationUtils.validateFullName
+import com.example.design.login.RegistrationUtils.validatePassword
+import com.example.design.login.RegistrationUtils.validatePhone
+import com.example.design.login.RegistrationUtils.validateUserName
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUp : BaseActivity(), View.OnClickListener {
 
-    override fun onApplicationCreate(savedInstanceState: Bundle?) {
-        Utils.hideStatusbar(window)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        hideStatusbar(window)
         setContentView(R.layout.activity_sign_up)
         signIn.setOnClickListener(this)
+        go.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        val intent=Intent(this@SignUp,LoginScreen::class.java)
-        val pairs = arrayOf(
-            android.util.Pair<View, String>(logoImage, "logo_image"),
-            android.util.Pair<View, String>(logoImageName, "logo_text"),
-            android.util.Pair<View, String>(sloganName, "sln"),
-            android.util.Pair<View, String>(userName, "logo_un"),
-            android.util.Pair<View, String>(password, "logo_pass"),
-            android.util.Pair<View, String>(go, "logo_go"),
-            android.util.Pair<View, String>(signIn, "logo_signup")
-        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val activityOptions = ActivityOptions.makeSceneTransitionAnimation(
-                this@SignUp,
-                pairs[0],
-                pairs[1],
-                pairs[2],
-                pairs[3],
-                pairs[4],
-                pairs[5],
-                pairs[6]
-            )
-            startActivity(intent, activityOptions.toBundle())
-        } else {
-            startActivity(intent)
+
+        when (v?.id) {
+            R.id.signIn -> {
+                startActivity(Intent(this@SignUp, LoginScreen::class.java))
+                finish()
+            }
+            R.id.go -> initiateValidation()
         }
+
     }
+
+    private fun initiateValidation() {
+        if (!validateFullName(name) || !validateUserName(userName) || !validateEmail(email) || !validatePhone(phone) || !validatePassword(password)) {
+            return
+        } else {
+            Toast.makeText(this, "Successfully Registered now try to Login.",
+                Toast.LENGTH_SHORT)
+                .show()
+        }
+
+
+    }
+
+
 }

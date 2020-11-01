@@ -1,4 +1,4 @@
-package com.example.design
+package com.example.design.ui.base
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,15 +6,15 @@ import com.example.design.login.LoginScreen
 
 abstract class BaseAuthentication : BaseActivity() {
 
-    override fun onApplicationCreate(savedInstanceState: Bundle?) {
-        myApplication?.auth?.userBucket?.isLoggedIn = false
-        if (!myApplication?.auth?.userBucket?.isLoggedIn!!) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (!spotifyApplication?.auth?.userBucket?.isLoggedIn!!) {
             startActivity(Intent(this, LoginScreen::class.java))
             finish()
         }
         postAuthCreate(savedInstanceState)
     }
 
-    abstract fun postAuthCreate(savedInstanceState: Bundle?)
+    protected abstract fun postAuthCreate(savedInstanceState: Bundle?)
 
 }

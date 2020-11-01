@@ -8,6 +8,7 @@ import android.view.WindowManager
 object Utils {
 
     public fun hideStatusbar(window: Window){
+        @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {

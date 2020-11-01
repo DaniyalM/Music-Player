@@ -1,4 +1,4 @@
-package com.example.design
+package com.example.design.ui
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -9,7 +9,9 @@ import android.os.Looper
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import com.example.design.R
 import com.example.design.Utils.hideStatusbar
+import com.example.design.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class SplashScreen : BaseActivity() {
@@ -17,10 +19,11 @@ class SplashScreen : BaseActivity() {
     private var bottomAnim: Animation? = null
 
     companion object {
-        private val SPLASH_TIMEOUT: Long = 5000
+        private const val SPLASH_TIMEOUT: Long = 5000
     }
 
-    override fun onApplicationCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         hideStatusbar(window)
         setContentView(R.layout.activity_main)
         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation)
@@ -31,7 +34,7 @@ class SplashScreen : BaseActivity() {
 
         textView2.apply {
             animation = bottomAnim
-            text = "Hey Daniyal : ${myApplication?.auth?.userBucket?.name}"
+            text = "Hey Daniyal : ${spotifyApplication?.auth?.userBucket?.name}"
 
         }
         Handler(Looper.getMainLooper()).postDelayed(
@@ -62,5 +65,8 @@ class SplashScreen : BaseActivity() {
         )
 
 
+
     }
+
+
 }
