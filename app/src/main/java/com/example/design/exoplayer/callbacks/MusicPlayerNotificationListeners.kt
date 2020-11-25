@@ -3,21 +3,21 @@ package com.example.design.exoplayer.callbacks
 import android.app.Notification
 import android.content.Intent
 import androidx.core.content.ContextCompat
+import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.example.design.exoplayer.MusicService
 import com.example.design.other.Constants.NOTIFICATION_ID
-import com.google.android.exoplayer2.ui.PlayerNotificationManager
 
-
-class MusicPlayerNotificationListener(private val musicService: MusicService):PlayerNotificationManager.NotificationListener {
+class MusicPlayerNotificationListener(
+    private val musicService: MusicService
+) : PlayerNotificationManager.NotificationListener {
 
     override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
         super.onNotificationCancelled(notificationId, dismissedByUser)
         musicService.apply {
             stopForeground(true)
-            musicService.isForegroundService=false
+            isForegroundService = false
             stopSelf()
         }
-
     }
 
     override fun onNotificationPosted(
@@ -26,14 +26,19 @@ class MusicPlayerNotificationListener(private val musicService: MusicService):Pl
         ongoing: Boolean
     ) {
         super.onNotificationPosted(notificationId, notification, ongoing)
-        musicService.apply{
-            if (ongoing&&!isForegroundService){
-                ContextCompat.startForegroundService(this, Intent(applicationContext,this::class.java))
-                startForeground(NOTIFICATION_ID,notification)
-                isForegroundService=true
+        musicService.apply {
+            if(ongoing && !isForegroundService) {
+                ContextCompat.startForegroundService(
+                    this,
+                    Intent(applicationContext, this::class.java)
+                )
+                startForeground(NOTIFICATION_ID, notification)
+                isForegroundService = true
             }
         }
     }
-
-
 }
+
+
+
+

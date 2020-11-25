@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,11 +10,11 @@
         <item name="textInputStyle">@style/EditTextStyle</item>
     </style>
 
-    <style name="EditTextStyle" parent="Widget.Design.TextInputLayout">
-        <item name="backgroundTint">@android:color/white</item>
+    <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="backgroundTint">@color/colorPrimary</item>
         <item name="cornerRadius">16dp</item>
         <item name="background">@color/colorAccent</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="PlayButtonStyle" parent="Widget.MaterialComponents.Button">

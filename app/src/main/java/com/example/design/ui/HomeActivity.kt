@@ -114,7 +114,7 @@ class HomeActivity : BaseAuthentication() {
             switchViewPagerToCurrentSong(curPlayingSong ?: return@observe)
 
         }
-        mainViewModel.playBackState.observe(this) {
+        mainViewModel.playbackState.observe(this) {
             playbackState = it
             ivPlayPause.setImageResource(
                 if (playbackState?.isPlaying == true) R.drawable.ic_pause else R.drawable.ic_play

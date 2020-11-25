@@ -108,7 +108,7 @@ class SongFragment : Fragment(R.layout.fragment_song) {
 
         }
 
-        mainViewModel.playBackState.observe(viewLifecycleOwner) {
+        mainViewModel.playbackState.observe(viewLifecycleOwner) {
             playbackState = it
 
             ivPlayPauseDetail.setImageResource(

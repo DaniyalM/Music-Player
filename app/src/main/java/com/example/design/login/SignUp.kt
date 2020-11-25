@@ -1,18 +1,21 @@
 package com.example.design.login
 
+import Utils.hideStatusbar
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.example.design.ui.base.BaseActivity
 import com.example.design.R
-import com.example.design.Utils.hideStatusbar
-import com.example.design.login.RegistrationUtils.validateEmail
 import com.example.design.login.RegistrationUtils.validateFullName
-import com.example.design.login.RegistrationUtils.validatePassword
-import com.example.design.login.RegistrationUtils.validatePhone
 import com.example.design.login.RegistrationUtils.validateUserName
+import com.example.design.login.RegistrationUtils.validateEmail
+import com.example.design.login.RegistrationUtils.validatePhone
+import com.example.design.login.RegistrationUtils.validatePassword
+
 import kotlinx.android.synthetic.main.activity_sign_up.*
+
+
 
 class SignUp : BaseActivity(), View.OnClickListener {
 
@@ -47,6 +50,7 @@ class SignUp : BaseActivity(), View.OnClickListener {
 
 
     }
+
 
 
 }

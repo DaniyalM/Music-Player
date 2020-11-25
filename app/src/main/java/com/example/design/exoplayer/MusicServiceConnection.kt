@@ -14,41 +14,77 @@ import com.example.design.other.Constants.NETWORK_ERROR
 import com.example.design.other.Event
 import com.example.design.other.Resource
 
-class MusicServiceConnection(context:Context) {
-    private val _isConnected=MutableLiveData<Event<Resource<Boolean>>>()
-    val isConnected:LiveData<Event<Resource<Boolean>>> = _isConnected
+class MusicServiceConnection(
+    context: Context
+) {
+    private val _isConnected = MutableLiveData<Event<Resource<Boolean>>>()
+    val isConnected: LiveData<Event<Resource<Boolean>>> = _isConnected
 
-    private val _networkError=MutableLiveData<Event<Resource<Boolean>>>()
-    val networkError:LiveData<Event<Resource<Boolean>>> = _networkError
+    private val _networkError = MutableLiveData<Event<Resource<Boolean>>>()
+    val networkError: LiveData<Event<Resource<Boolean>>> = _networkError
 
-    private val _playbackState=MutableLiveData<PlaybackStateCompat?>()
-    val playbackState:LiveData<PlaybackStateCompat?> = _playbackState
+    private val _playbackState = MutableLiveData<PlaybackStateCompat?>()
+    val playbackState: LiveData<PlaybackStateCompat?> = _playbackState
 
-    private val _curPlayingSong=MutableLiveData<MediaMetadataCompat?>()
-    val curPlayingSong:LiveData<MediaMetadataCompat?> = _curPlayingSong
+    private val _curPlayingSong = MutableLiveData<MediaMetadataCompat?>()
+    val curPlayingSong: LiveData<MediaMetadataCompat?> = _curPlayingSong
 
-    lateinit var mediaController:MediaControllerCompat
+    lateinit var mediaController: MediaControllerCompat
 
-    private val mediaBrowserConnectionCallBack=MediaBrowserConnectionCallBack(context)
+    private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
 
-    val transportControls:MediaControllerCompat.TransportControls
-        get() =mediaController.transportControls
-
-    private val mediaBrowser=MediaBrowserCompat(context, ComponentName(context, MusicService::class.java),
-        mediaBrowserConnectionCallBack,
+    private val mediaBrowser = MediaBrowserCompat(
+        context,
+        ComponentName(
+            context,
+            MusicService::class.java
+        ),
+        mediaBrowserConnectionCallback,
         null
-    ).apply {
-        connect()
+    ).apply { connect() }
+
+    val transportControls: MediaControllerCompat.TransportControls
+        get() = mediaController.transportControls
+
+    fun subscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
+        mediaBrowser.subscribe(parentId, callback)
     }
 
-    fun subscribe(parentId:String,callback:MediaBrowserCompat.SubscriptionCallback){
-        mediaBrowser.subscribe(parentId,callback)
-    }
-    fun unsubscribe(parentId:String,callback:MediaBrowserCompat.SubscriptionCallback){
-        mediaBrowser.unsubscribe(parentId,callback)
+    fun unsubscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
+        mediaBrowser.unsubscribe(parentId, callback)
     }
 
-    private inner class MediaControllerCallback: MediaControllerCompat.Callback(){
+    private inner class MediaBrowserConnectionCallback(
+        private val context: Context
+    ) : MediaBrowserCompat.ConnectionCallback() {
+
+        override fun onConnected() {
+            Log.d("MusicServiceConnection", "CONNECTED")
+            mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
+                registerCallback(MediaContollerCallback())
+            }
+            _isConnected.postValue(Event(Resource.success(true)))
+        }
+
+        override fun onConnectionSuspended() {
+            Log.d("MusicServiceConnection", "SUSPENDED")
+
+            _isConnected.postValue(Event(Resource.error(
+                "The connection was suspended", false
+            )))
+        }
+
+        override fun onConnectionFailed() {
+            Log.d("MusicServiceConnection", "FAILED")
+
+            _isConnected.postValue(Event(Resource.error(
+                "Couldn't connect to media browser", false
+            )))
+        }
+    }
+
+    private inner class MediaContollerCallback : MediaControllerCompat.Callback() {
+
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             _playbackState.postValue(state)
         }
@@ -59,40 +95,21 @@ class MusicServiceConnection(context:Context) {
 
         override fun onSessionEvent(event: String?, extras: Bundle?) {
             super.onSessionEvent(event, extras)
-            when(event){
-                NETWORK_ERROR->_networkError.postValue(Event(
-                    Resource.error(
-                        "Couldn't Connect to the server.",
-                        null
+            when(event) {
+                NETWORK_ERROR -> _networkError.postValue(
+                    Event(
+                        Resource.error(
+                            "Couldn't connect to the server. Please check your internet connection.",
+                            null
+                        )
                     )
-                ))
+                )
             }
         }
 
         override fun onSessionDestroyed() {
-            mediaBrowserConnectionCallBack.onConnectionSuspended()
+            mediaBrowserConnectionCallback.onConnectionSuspended()
         }
     }
-    private inner class MediaBrowserConnectionCallBack(private val context: Context):MediaBrowserCompat.ConnectionCallback(){
-        override fun onConnected() {
-            Log.d("MusicServiceConnection", "CONNECTED")
-            mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
-                registerCallback(MediaControllerCallback())
-            }
-            _isConnected.postValue(Event(Resource.success(true)))
-
-
-        }
-
-        override fun onConnectionSuspended() {
-            _isConnected.postValue(Event(Resource.error("The connection was suspended.",false)))
-        }
-
-        override fun onConnectionFailed() {
-            _isConnected.postValue(Event(Resource.error("Couldn't Connect To Media Browser.",false)))
-
-        }
-    }
-
-
 }
+

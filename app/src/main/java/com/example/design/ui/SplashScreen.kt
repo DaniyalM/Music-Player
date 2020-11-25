@@ -1,5 +1,6 @@
 package com.example.design.ui
 
+import Utils.hideStatusbar
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.example.design.R
-import com.example.design.Utils.hideStatusbar
 import com.example.design.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 

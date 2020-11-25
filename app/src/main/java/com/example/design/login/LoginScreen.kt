@@ -1,5 +1,6 @@
 package com.example.design.login
 
+import Utils.hideStatusbar
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
@@ -7,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import com.example.design.ui.base.BaseActivity
 import com.example.design.R
-import com.example.design.Utils.hideStatusbar
 import com.example.design.login.LoginUtils.lookUpForUserName
 import com.example.design.login.LoginUtils.passWordValidation
 import com.example.design.ui.HomeActivity
